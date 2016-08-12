@@ -47,6 +47,12 @@ body {
   font-size: 20px;
   color: $text-color;
   font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: $background-color; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($background-color, white); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($background-color, white); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($background-color, white); /* For Firefox 3.6 to 15 */
+  background: linear-gradient($background-color, white); /* Standard syntax */
+  background-repeat: no-repeat;
 }
 
 b, strong {
@@ -107,6 +113,63 @@ h3 {
   font-size: 25px;
   font-weight: 600;
   color: $text-color;
+}
+ul > h4 {
+  position: absolute;
+  z-index: 3;
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  float: none;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  opacity: 1;
+  margin: 0;
+  padding: 0 20px;
+  overflow: visible;
+  border: none;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  font: normal normal bold 20px/40px "Baumans", Helvetica, sans-serif;
+  color: black;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: rgb(221, 221, 221);
+  -webkit-box-shadow: 0 1px 0 0 rgb(119,119,119) , 0 2px 0 0 rgb(119,119,119) , 0 3px 0 0 rgb(119,119,119) , 0 4px 0 0 rgb(119,119,119) , 0 5px 0 0 rgb(119,119,119) , 0 6px 0 0 rgb(119,119,119) , 0 0 5px 0 rgba(0,0,0,0.0980392) , 0 1px 3px 0 rgba(0,0,0,0.298039) , 0 3px 5px 0 rgba(0,0,0,0.2) , 0 5px 10px 0 rgba(0,0,0,0.247059) , 0 10px 10px 0 rgba(0,0,0,0.2) , 0 20px 20px 0 rgba(0,0,0,0.14902) ;
+  box-shadow: 0 1px 0 0 rgb(119,119,119) , 0 2px 0 0 rgb(119,119,119) , 0 3px 0 0 rgb(119,119,119) , 0 4px 0 0 rgb(119,119,119) , 0 5px 0 0 rgb(119,119,119) , 0 6px 0 0 rgb(119,119,119) , 0 0 5px 0 rgba(0,0,0,0.0980392) , 0 1px 3px 0 rgba(0,0,0,0.298039) , 0 3px 5px 0 rgba(0,0,0,0.2) , 0 5px 10px 0 rgba(0,0,0,0.247059) , 0 10px 10px 0 rgba(0,0,0,0.2) , 0 20px 20px 0 rgba(0,0,0,0.14902) ;
+  text-shadow: 0 1px 0 #FFFFFF ;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
+}
+// ----------------------------------------------------------------------------
+// One Membership Custom styles
+// ----------------------------------------------------------------------------
+
+#tier {
+  color: #E5E4E2;
+  font-size: 50px;
+  text-align: center;
+  /*stitching*/
+  outline: 1px dashed #98abb9;
+  outline-offset: -5px;
+
+  background-color: #556068;
+  height: auto;
+  width: 350px;
+
+  /*shadow*/
+  -webkit-box-shadow: 2px 2px 2px #000;
+  -moz-box-shadow: 2px 2px 2px #000;
+  box-shadow: 2px 2px 2px #000;
+  margin: auto;
 }
 
 // ----------------------------------------------------------------------------
