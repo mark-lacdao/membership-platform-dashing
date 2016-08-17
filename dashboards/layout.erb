@@ -17,6 +17,9 @@
 
 </head>
   <body>
+    <button id="fail">Fail Monitor</button>
+    <button id="move">Move Failing Monitors</button>
+    <button id="reset">Reset</button>
     <div id="tier"><%= yield_content(:tier) %> Tier</div>
     <div id="container">
       <%= yield %>
@@ -29,5 +32,55 @@
       </div>
       <a href="#saving-instructions" id="save-gridster">Save this layout</a>
     <% end %>
+    <script type="application/javascript">
+      $(function(){
+
+        var failingMonitors = $();
+        var passingMonitors = $();
+        var failingListItems = $();
+        var passingListItems = $();
+
+        $("#fail").click( function()
+            {
+              $.fn.changeClasses();
+            }
+        );
+        $("#move").click( function()
+            {
+              $.fn.moveFailingMonitors();
+            }
+        );
+        $("#reset").click( function()
+            {
+              $.fn.reset();
+            }
+        );
+        $.fn.reinit = function () {
+          failingMonitors = $( "div.status-unavailable" );
+          passingMonitors = $( "div.status-available" );
+          failingListItems = failingMonitors.parent();
+          passingListItems = passingMonitors.parent();
+        };
+        $.fn.reset = function(){
+          $.fn.reinit();
+          failingListItems.attr("data-col", "2");
+          passingListItems.attr("data-col", "1");
+          failingMonitors.removeClass("status-unavailable");
+          failingMonitors.addClass("status-available");
+        };
+        $.fn.changeClasses = function(){
+          var validateSessionMonitor = $("div[data-id='validate-session']");
+          validateSessionMonitor.removeClass("status-available");
+          validateSessionMonitor.addClass("status-unavailable");
+        };
+        $.fn.moveFailingMonitors = function(){
+          $.fn.reinit();
+          failingListItems.attr("data-col", "1");
+          passingListItems.attr("data-col", "2");
+          //$.fn.gridster().generate_grid_and_stylesheet();
+        };
+
+      });
+    </script>
   </body>
 </html>
