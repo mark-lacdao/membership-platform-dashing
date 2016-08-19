@@ -69,6 +69,7 @@ All changes pushed to the master branch are automatically released.
   export PINGDOM_USER=<PINGDOM_USER>
   export PINGDOM_PASSWORD=<PINGDOM_PASSWORD>
   export PINGDOM_API_KEY=<PINGDOM_API_KEY>
+  export S3O_COOKIE=<S3O_COOKIE>
   bundle exec thin start -R config.ru
 
 ### Where is the app hosted?

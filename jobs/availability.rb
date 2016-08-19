@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'nokogiri'
+require 'open-uri'
 require 'net/http'
 require 'json'
 require 'rest-client'
@@ -8,6 +11,7 @@ apiKey = ENV['PINGDOM_API_KEY'] || ''
 logentriesApiKey = ENV['LOGENTRIES_API_KEY'] || ''
 user = ENV['PINGDOM_USER'] || ''
 password = ENV['PINGDOM_PASSWORD'] || ''
+s3oCredentials = ENV['S3O_COOKIE'] || ''
 
 def performCheckAndSendEventToWidgets(widgetId, urlHostName, urlPath, tlsEnabled)
 
@@ -19,13 +23,26 @@ def performCheckAndSendEventToWidgets(widgetId, urlHostName, urlPath, tlsEnabled
   end
 
   response = http.request(Net::HTTP::Get.new(urlPath))
-
+  print 'Accessing ' + urlHostName + ' Status Code ' + response.code + "\n"
   if response.code == '200'
     send_event(widgetId, { value: 'ok', status: 'available' })
   else
     send_event(widgetId, { value: 'danger', status: 'unavailable' })
   end
 
+end
+
+def getStatusFromHealthCheck(widgetId, urlHost, urlPath, s3oCredentials)
+  healthCheckUrl = urlHost + urlPath
+  cookieValue = 's3o-credentials=' + s3oCredentials
+  page = Nokogiri::HTML(open(healthCheckUrl, 'Cookie' => cookieValue))
+  status = page.at_css('#status > div').inner_text
+  print 'Status is ' + status + "\n"
+  if status == 'OK'
+    send_event(widgetId, { value: 'ok', status: 'available' })
+  else
+    send_event(widgetId, { value: 'danger', status: 'unavailable' })
+  end
 end
 
 def getUptimeMetricsFromPingdom(checkId, apiKey, user, password)
@@ -97,7 +114,10 @@ SCHEDULER.every '30s', first_in: 0 do |job|
 
   performCheckAndSendEventToWidgets('login', 'login-api-at-eu-prod.herokuapp.com', '/tests/critical', true)
   performCheckAndSendEventToWidgets('validate-session', 'ft-memb-session-api-at-elb-p-301208839.eu-west-1.elb.amazonaws.com', '/tests/critical-validate', false)
-  getUptimeMetricsFromPingdom('1965634', apiKey, user, password)
+  getStatusFromHealthCheck('loginapi-eu', 'http://healthcheck.ft.com', '/service/399714ea73e0015e425666917931e6a4', s3oCredentials)
+  getStatusFromHealthCheck('loginapi-us', 'http://healthcheck.ft.com', '/service/ad9e37cf76f09190d5e39a9fd71a874f', s3oCredentials)
+  getStatusFromHealthCheck('loginapp-eu', 'http://healthcheck.ft.com', '/service/28c1512a87c1bb807ed55a6ecd7798b1', s3oCredentials)
+  getStatusFromHealthCheck('loginapp-us', 'http://healthcheck.ft.com', '/service/ce39ec61ec18eefb5fadb9d4a89d1543', s3oCredentials)
   getUptimeMetricsFromPingdom('2142836', apiKey, user, password)
 
 end
