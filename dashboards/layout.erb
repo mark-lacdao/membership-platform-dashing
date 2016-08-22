@@ -17,6 +17,7 @@
 
 </head>
   <body>
+    <div id="overlay"> </div>
     <button id="fail">Fail Monitor</button>
     <div id="tier"><%= yield_content(:tier) %> Tier</div>
     <div id="container">
@@ -35,9 +36,12 @@
 
         $("#fail").click( function()
             {
-              var failMonitor = $("div[data-id='loginapp-us']");
-              failMonitor.removeClass("status-available");
-              failMonitor.addClass("status-unavailable");
+              var failMonitor1 = $("div[data-id='loginapp-us']");
+              failMonitor1.removeClass("status-available");
+              failMonitor1.addClass("status-unavailable");
+              var failMonitor2 = $("div[data-id='loginapp-eu']");
+              failMonitor2.removeClass("status-available");
+              failMonitor2.addClass("status-unavailable");
             }
         );
 
@@ -49,8 +53,20 @@
           return $( "div.status-available" );
         };
 
-        $.fn.showScrollingAlert = function(){
+        $.fn.showScrollingAlert = function(failingMonitors){
           $('#alerts').css('display', 'inline-block');
+          var alertsMarquee = $('#alerts marquee');
+          // Remove alert contents
+          alertsMarquee.empty();
+          failingMonitors.each(function( index ) {
+            var monitorName = $( this ).attr('data-title');
+            var impact = $( this ).attr('data-text');
+            var alertName = $("<p></p>").text("*" + monitorName + ":");
+            var alertDetails = $("<p></p>").text(impact  + "  ");
+            alertName.addClass('alert-name');
+            alertDetails.addClass('alert-details');
+            alertsMarquee.append(alertName, alertDetails);
+          });
         };
 
         $.fn.hideScrollingAlert = function(){
@@ -58,29 +74,29 @@
         };
 
         $.fn.showFailureDashboard = function(){
+          $('#overlay').css('display', 'inline-block');
+        };
 
+        $.fn.hideFailureDashboard = function(){
+          $('#overlay').css('display', 'none');
         };
 
         window.setInterval(function(){
           var failingMonitors = $.fn.getFailingMonitors();
           if(failingMonitors.length > 0){ // If there are failing monitors
-            $.fn.showScrollingAlert();
-            $.fn.showFailureDashboard();
+            $.fn.showScrollingAlert(failingMonitors);
+            //$.fn.showFailureDashboard();
           } else {
             $.fn.hideScrollingAlert();
+            //$.fn.hideFailureDashboard();
           }
         }, 5000);
 
       });
     </script>
-    <div id="alerts" style="display: none; position: fixed; bottom: 0; width: 100%; background-color:black; z-index: 9;">
+    <div id="alerts">
 
       <marquee behavior="scroll" direction="left" scrollamount="15" class="tab blink">
-
-        <font color="red" size="23pt" ><b>FAILING MONITOR ALERT 1!!!</b></font>
-        <font color="white" size="23pt"><b>&nbsp;&nbsp;Scrolling text with details...</b></font>
-        <font color="red" size="23pt"><b>&nbsp;FAILING MONITOR ALERT 2!!!</b></font>
-        <font color="white" size="23pt"><b>&nbsp;&nbsp;Scrolling text with details...</b></font>
 
       </marquee>
     </div>

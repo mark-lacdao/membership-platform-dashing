@@ -172,6 +172,42 @@ ul > h4 {
   margin: auto;
 }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  filter:alpha(opacity=50);
+  -moz-opacity:0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+  z-index: 10000;
+  display: none;
+}
+
+#alerts {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color:black;
+  z-index: 9;
+  font-size: 23pt;
+  font-weight: bold;
+}
+
+.alert-name {
+  color: red;
+  display: inline;
+}
+
+.alert-details {
+  color: white;
+  display: inline;
+}
+
 // ----------------------------------------------------------------------------
 // Base widget styles
 // ----------------------------------------------------------------------------
