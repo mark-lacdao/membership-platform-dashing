@@ -18,8 +18,6 @@
 </head>
   <body>
     <button id="fail">Fail Monitor</button>
-    <button id="move">Move Failing Monitors</button>
-    <button id="reset">Reset</button>
     <div id="tier"><%= yield_content(:tier) %> Tier</div>
     <div id="container">
       <%= yield %>
@@ -35,52 +33,56 @@
     <script type="application/javascript">
       $(function(){
 
-        var failingMonitors = $();
-        var passingMonitors = $();
-        var failingListItems = $();
-        var passingListItems = $();
-
         $("#fail").click( function()
             {
-              $.fn.changeClasses();
+              var failMonitor = $("div[data-id='loginapp-us']");
+              failMonitor.removeClass("status-available");
+              failMonitor.addClass("status-unavailable");
             }
         );
-        $("#move").click( function()
-            {
-              $.fn.moveFailingMonitors();
-            }
-        );
-        $("#reset").click( function()
-            {
-              $.fn.reset();
-            }
-        );
-        $.fn.reinit = function () {
-          failingMonitors = $( "div.status-unavailable" );
-          passingMonitors = $( "div.status-available" );
-          failingListItems = failingMonitors.parent();
-          passingListItems = passingMonitors.parent();
+
+        $.fn.getFailingMonitors = function(){
+          return $( "div.status-unavailable" );
         };
-        $.fn.reset = function(){
-          $.fn.reinit();
-          failingListItems.attr("data-col", "2");
-          passingListItems.attr("data-col", "1");
-          failingMonitors.removeClass("status-unavailable");
-          failingMonitors.addClass("status-available");
+
+        $.fn.getPassingMonitors = function(){
+          return $( "div.status-available" );
         };
-        $.fn.changeClasses = function(){
-          var validateSessionMonitor = $("div[data-id='validate-session']");
-          validateSessionMonitor.removeClass("status-available");
-          validateSessionMonitor.addClass("status-unavailable");
+
+        $.fn.showScrollingAlert = function(){
+          $('#alerts').css('display', 'inline-block');
         };
-        $.fn.moveFailingMonitors = function(){
-          $.fn.reinit();
-          failingListItems.attr("data-col", "1");
-          passingListItems.attr("data-col", "2");
-          //$.fn.gridster().generate_grid_and_stylesheet();
+
+        $.fn.hideScrollingAlert = function(){
+          $('#alerts').css('display', 'none');
         };
+
+        $.fn.showFailureDashboard = function(){
+
+        };
+
+        window.setInterval(function(){
+          var failingMonitors = $.fn.getFailingMonitors();
+          if(failingMonitors.length > 0){ // If there are failing monitors
+            $.fn.showScrollingAlert();
+            $.fn.showFailureDashboard();
+          } else {
+            $.fn.hideScrollingAlert();
+          }
+        }, 5000);
 
       });
     </script>
+    <div id="alerts" style="display: none; position: fixed; bottom: 0; width: 100%; background-color:black; z-index: 9;">
+
+      <marquee behavior="scroll" direction="left" scrollamount="15" class="tab blink">
+
+        <font color="red" size="23pt" ><b>FAILING MONITOR ALERT 1!!!</b></font>
+        <font color="white" size="23pt"><b>&nbsp;&nbsp;Scrolling text with details...</b></font>
+        <font color="red" size="23pt"><b>&nbsp;FAILING MONITOR ALERT 2!!!</b></font>
+        <font color="white" size="23pt"><b>&nbsp;&nbsp;Scrolling text with details...</b></font>
+
+      </marquee>
+    </div>
   </body>
 </html>
