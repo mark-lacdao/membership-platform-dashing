@@ -17,9 +17,8 @@
 
 </head>
   <body>
-    <div id="overlay" class="gridster">
-
-    </div>
+    <div id="overlay"></div>
+    <div id="overlay-content" class="gridster"></div>
     <button id="fail">Fail Monitor</button>
     <div id="tier"><%= yield_content(:tier) %> Tier</div>
     <div id="container">
@@ -78,24 +77,25 @@
         };
 
         var failureOverlay = $('#overlay');
+        var failureOverlayContent = $('#overlay-content');
 
         $.fn.showFailureDashboard = function(failingMonitors){
           failureOverlay.css('display', 'inline-block');
+          failureOverlayContent.css('display', 'inline-block');
           failingMonitors.each(function( index ) {
             var dataId = $(this).attr('data-id');
             console.log('Checking data id ' + dataId);
             // Check first if monitor was already added
-            if(failureOverlay.find("div[data-id=" + dataId + "]").length == 0) {
-              failureOverlay.append($(this).parent().clone());
-            } else {
-              console.log(dataId + ' already added.');
+            if(failureOverlayContent.find("div[data-id=" + dataId + "]").length == 0) {
+              failureOverlayContent.append($(this).parent().clone());
             }
           });
         };
 
         $.fn.hideFailureDashboard = function(){
-          failureOverlay.empty();
-          $('#overlay').css('display', 'none');
+          failureOverlayContent.empty();
+          failureOverlay.css('display', 'none');
+          failureOverlayContent.css('display', 'none');
         };
 
         window.setInterval(function(){
