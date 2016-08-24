@@ -17,7 +17,9 @@
 
 </head>
   <body>
-    <div id="overlay"> </div>
+    <div id="overlay" class="gridster">
+
+    </div>
     <button id="fail">Fail Monitor</button>
     <div id="tier"><%= yield_content(:tier) %> Tier</div>
     <div id="container">
@@ -36,17 +38,18 @@
 
         $("#fail").click( function()
             {
-              var failMonitor1 = $("div[data-id='loginapp-us']");
+              var failMonitor1 = $("div[data-id='loginapi-us']");
               failMonitor1.removeClass("status-available");
               failMonitor1.addClass("status-unavailable");
-              var failMonitor2 = $("div[data-id='loginapp-eu']");
+              var failMonitor2 = $("div[data-id='loginapi-eu']");
               failMonitor2.removeClass("status-available");
               failMonitor2.addClass("status-unavailable");
             }
         );
 
         $.fn.getFailingMonitors = function(){
-          return $( "div.status-unavailable" );
+          var container = $('#container');
+          return container.find( "div.status-unavailable" );
         };
 
         $.fn.getPassingMonitors = function(){
@@ -54,8 +57,9 @@
         };
 
         $.fn.showScrollingAlert = function(failingMonitors){
-          $('#alerts').css('display', 'inline-block');
-          var alertsMarquee = $('#alerts marquee');
+          var alertsDiv = $('#alerts');
+          alertsDiv.css('display', 'inline-block');
+          var alertsMarquee = alertsDiv.find('marquee');
           // Remove alert contents
           alertsMarquee.empty();
           failingMonitors.each(function( index ) {
@@ -73,11 +77,24 @@
           $('#alerts').css('display', 'none');
         };
 
-        $.fn.showFailureDashboard = function(){
-          $('#overlay').css('display', 'inline-block');
+        var failureOverlay = $('#overlay');
+
+        $.fn.showFailureDashboard = function(failingMonitors){
+          failureOverlay.css('display', 'inline-block');
+          failingMonitors.each(function( index ) {
+            var dataId = $(this).attr('data-id');
+            console.log('Checking data id ' + dataId);
+            // Check first if monitor was already added
+            if(failureOverlay.find("div[data-id=" + dataId + "]").length == 0) {
+              failureOverlay.append($(this).parent().clone());
+            } else {
+              console.log(dataId + ' already added.');
+            }
+          });
         };
 
         $.fn.hideFailureDashboard = function(){
+          failureOverlay.empty();
           $('#overlay').css('display', 'none');
         };
 
@@ -85,12 +102,12 @@
           var failingMonitors = $.fn.getFailingMonitors();
           if(failingMonitors.length > 0){ // If there are failing monitors
             $.fn.showScrollingAlert(failingMonitors);
-            //$.fn.showFailureDashboard();
+            $.fn.showFailureDashboard(failingMonitors);
           } else {
             $.fn.hideScrollingAlert();
-            //$.fn.hideFailureDashboard();
+            $.fn.hideFailureDashboard();
           }
-        }, 5000);
+        }, 3000);
 
       });
     </script>
