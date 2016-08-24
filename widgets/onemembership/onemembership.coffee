@@ -1,4 +1,4 @@
-class Dashing.Availability extends Dashing.Widget
+class Dashing.Onemembership extends Dashing.Widget
 
   onData: (data) ->
     # clear existing "status-*" classes
