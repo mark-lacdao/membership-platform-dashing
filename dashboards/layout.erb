@@ -35,6 +35,8 @@
     <script type="application/javascript">
       $(function(){
 
+        var audioElem = document.getElementById('audio');
+
         $("#fail").click( function()
             {
               var failMonitor1 = $("div[data-id='loginapi-us']");
@@ -80,6 +82,9 @@
         var failureOverlayContent = $('#overlay-content');
 
         $.fn.showFailureDashboard = function(failingMonitors){
+          if (audioElem.paused) {
+            audioElem.play();
+          }
           failureOverlay.css('display', 'inline-block');
           failureOverlayContent.css('display', 'inline-block');
           failingMonitors.each(function( index ) {
@@ -93,6 +98,7 @@
         };
 
         $.fn.hideFailureDashboard = function(){
+          audioElem.pause();
           failureOverlayContent.empty();
           failureOverlay.css('display', 'none');
           failureOverlayContent.css('display', 'none');
@@ -112,10 +118,12 @@
       });
     </script>
     <div id="alerts">
-
       <marquee behavior="scroll" direction="left" scrollamount="15" class="tab blink">
-
       </marquee>
+      <audio id="audio">
+        <source src="/alert.mp3">
+        Your browser does not support this audio format.
+      </audio>
     </div>
   </body>
 </html>
