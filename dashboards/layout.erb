@@ -35,7 +35,8 @@
     <script type="application/javascript">
       $(function(){
 
-        var audioElem = document.getElementById('audio');
+        var alertAudio = document.getElementById('audio');
+        var fixedAudio = document.getElementById('green');
 
         $("#fail").click( function()
             {
@@ -82,8 +83,8 @@
         var failureOverlayContent = $('#overlay-content');
 
         $.fn.showFailureDashboard = function(failingMonitors){
-          if (audioElem.paused) {
-            audioElem.play();
+          if (alertAudio.paused) {
+            alertAudio.play();
           }
           failureOverlay.css('display', 'inline-block');
           failureOverlayContent.css('display', 'inline-block');
@@ -98,7 +99,9 @@
         };
 
         $.fn.hideFailureDashboard = function(){
-          audioElem.pause();
+          alertAudio.pause();
+          console.log('Playing fixed audio.');
+          fixedAudio.play();
           failureOverlayContent.empty();
           failureOverlay.css('display', 'none');
           failureOverlayContent.css('display', 'none');
@@ -110,8 +113,10 @@
             $.fn.showScrollingAlert(failingMonitors);
             $.fn.showFailureDashboard(failingMonitors);
           } else {
-            $.fn.hideScrollingAlert();
-            $.fn.hideFailureDashboard();
+            if(failureOverlay.is(':visible') && $('#alerts').is(':visible')) { // Only hide alerts when they are visible
+              $.fn.hideScrollingAlert();
+              $.fn.hideFailureDashboard();
+            }
           }
         }, 3000);
 
@@ -120,8 +125,12 @@
     <div id="alerts">
       <marquee behavior="scroll" direction="left" scrollamount="15" class="tab blink">
       </marquee>
-      <audio id="audio">
-        <source src="/alert.mp3">
+      <audio id="audio" loop autostart="0">
+        <source src="/alert.mp3" type="audio/mpeg">
+        Your browser does not support this audio format.
+      </audio>
+      <audio id="green" autostart="0">
+        <source src="/green.mp3" type="audio/mpeg">
         Your browser does not support this audio format.
       </audio>
     </div>
